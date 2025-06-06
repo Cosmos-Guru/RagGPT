@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Internet‐RAG Chat (Gemma 2 + Ollama + LangChain)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: auto;
+        }
+        #chat-history {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+        }
+        .user {
+            color: #1976d2;
+            margin: 5px 0;
+        }
+        .bot {
+            color: #333;
+            margin: 5px 0;
+        }
+        textarea {
+            width: 100%;
+            padding: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        button {
+            margin-top: 5px;
+            padding: 8px 16px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Internet‐RAG Chat (Gemma 2 + Ollama + LangChain)</h1>
+    <div id="chat-history"></div>
+
+    <textarea id="userInput" rows="4" placeholder="Type your question here..."></textarea>
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+    async function sendMessage() {
+        const prompt = document.getElementById("userInput").value.trim();
+        if (!prompt) return;
+
+        const chatDiv = document.getElementById("chat-history");
+        // Append user message
+        chatDiv.innerHTML += `<div class="user"><b>You:</b> ${prompt}</div>`;
+        document.getElementById("userInput").value = "";
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+
+        try {
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt })
+            });
+            const data = await response.json();
+            if (data.error) {
+                chatDiv.innerHTML += `<div class="bot"><b>Error:</b> ${data.error}</div>`;
+            } else {
+                chatDiv.innerHTML += `<div class="bot"><b>Summary:</b> ${data.response}</div>`;
+            }
+        } catch (err) {
+            chatDiv.innerHTML += `<div class="bot"><b>Error:</b> ${err}</div>`;
+        }
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+    </script>
+</body>
+</html>
+
