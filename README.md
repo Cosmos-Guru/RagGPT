@@ -139,8 +139,8 @@ Below are step-by-step instructions for Mac and Windows novice users.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/internet-rag-chat.git
-cd internet-rag-chat
+git clone https://github.com/Cosmos-Guru/RagGPT.git
+cd RagGPT
 ```
 
 ### 2. Install Ollama & Pull Gemma 2
